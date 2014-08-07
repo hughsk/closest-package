@@ -1,0 +1,37 @@
+{
+  "name": "closest-package",
+  "version": "1.0.0",
+  "description": "Find the closest package.json file meeting specific criteria",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "node test | tap-spec"
+  },
+  "author": {
+    "name": "Hugh Kennedy",
+    "email": "hughskennedy@gmail.com",
+    "url": "http://hughsk.io/"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "deep-equal": "^0.2.1",
+    "tap-spec": "^0.2.0",
+    "tape": "^2.14.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hughsk/closest-package.git"
+  },
+  "keywords": [
+    "package",
+    "json",
+    "parse",
+    "find",
+    "up",
+    "closest"
+  ],
+  "homepage": "https://github.com/hughsk/closest-package",
+  "bugs": {
+    "url": "https://github.com/hughsk/closest-package/issues"
+  }
+}
