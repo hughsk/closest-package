@@ -1,10 +1,11 @@
 var path = require('path')
 var fs   = require('fs')
+var jju   = require('jju')
 
 module.exports = closest
 module.exports.sync = closestSync
 
-function closest(dirname, filter, found) {
+function closest(extension, dirname, filter, found) {
   dirname = path.resolve(dirname)
 
   if (!found) {
@@ -16,7 +17,7 @@ function closest(dirname, filter, found) {
   function check() {
     if (isRoot(dirname)) return found(null, null)
 
-    var pkgfile = path.join(dirname, 'package.json')
+    var pkgfiles = path.join(dirname, 'package.' + extension);
 
     fs.exists(pkgfile, function(exists) {
       if (!exists) return next()
@@ -35,12 +36,12 @@ function closest(dirname, filter, found) {
   }
 }
 
-function closestSync(dirname, filter) {
+function closestSync(extension, dirname, filter) {
   dirname = path.resolve(dirname)
   filter  = filter || truthy
 
   do {
-    var pkgfile = path.join(dirname, 'package.json')
+    var pkgfile = path.join(dirname, 'package.' + extension)
     if (!fs.existsSync(pkgfile)) continue
     var pkg = readSync(pkgfile)
     if (filter(pkg, pkgfile)) return pkgfile
@@ -60,7 +61,7 @@ function read(pkg, done) {
     if (err) return done(err)
 
     try {
-      json = JSON.parse(json)
+      json = jju.parse(json)
     } catch(e) { done(e) }
 
     return done(null, json)
@@ -68,7 +69,7 @@ function read(pkg, done) {
 }
 
 function readSync(pkg) {
-  return JSON.parse(fs.readFileSync(pkg, 'utf8'))
+  return jju.parse(fs.readFileSync(pkg, 'utf8'))
 }
 
 function truthy() {
