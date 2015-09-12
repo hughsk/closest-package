@@ -1,5 +1,6 @@
 var path = require('path')
 var fs   = require('fs')
+var jph  = require('json-parse-helpfulerror')
 
 module.exports = closest
 module.exports.sync = closestSync
@@ -60,17 +61,31 @@ function read(pkg, done) {
     if (err) return done(err)
 
     try {
-      json = JSON.parse(json)
-    } catch(e) { done(e) }
+      json = jph.parse(json)
+    } catch(e) {
+      extendParseError(e, pkg)
+      done(e)
+    }
 
     return done(null, json)
   })
 }
 
 function readSync(pkg) {
-  return JSON.parse(fs.readFileSync(pkg, 'utf8'))
+  try {
+    return jph.parse(fs.readFileSync(pkg, 'utf8'))
+  } catch(e) {
+    extendParseError(e, pkg)
+    throw e
+  }
 }
 
 function truthy() {
   return true
+}
+
+function extendParseError(e, filename) {
+  if (e instanceof SyntaxError) {
+    e.message = 'Malformed JSON in file: ' + filename + '\n' + e.message
+  }
 }
